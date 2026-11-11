@@ -4,7 +4,6 @@ import React, { use, useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { getTrackBySlug, LyricLine } from "@/src/data/tracks";
 import { useAudio } from "@/src/context/AudioContext";
-import { Tape } from "@/src/components/Tape";
 
 interface SyncHelperProps {
   params: Promise<{ slug: string }>;
@@ -13,7 +12,7 @@ interface SyncHelperProps {
 export default function SyncHelper({ params }: SyncHelperProps) {
   const resolvedParams = use(params);
   const track = getTrackBySlug(resolvedParams.slug);
-  const { playTrack, pause, isPlaying, currentTime } = useAudio();
+  const { playTrack, pause, seek, isPlaying, currentTime } = useAudio();
 
   const [rawText, setRawText] = useState(
     "Paste your lyrics here\nOne line per row\nThen press start\nAnd tap SPACE at each line!"
@@ -39,6 +38,17 @@ export default function SyncHelper({ params }: SyncHelperProps) {
     setLines(splitLines);
     setCurrentIndex(0);
     setIsSyncing(true);
+    seek(0);
+    playTrack(track);
+  };
+
+  const handleRestart = () => {
+    if (!track) return;
+    const resetLines = lines.map((l) => ({ ...l, t: 0 }));
+    setLines(resetLines);
+    setCurrentIndex(0);
+    setIsSyncing(true);
+    seek(0);
     playTrack(track);
   };
 
@@ -88,8 +98,6 @@ export default function SyncHelper({ params }: SyncHelperProps) {
   return (
     <main className="desk-surface chords-page-wrapper">
       <div className="chords-notebook-sheet" style={{ maxWidth: 800 }}>
-        <Tape variant="cyan" angle={-2} width={90} height={28} style={{ position: "absolute", top: -14, left: 35 }} />
-        
         <div className="chords-header">
           <Link href="/" className="chords-back-link">← back to desk</Link>
           <div className="chords-title-group">
@@ -142,16 +150,27 @@ export default function SyncHelper({ params }: SyncHelperProps) {
                   "{lines[currentIndex]?.text}"
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsSyncing(false);
-                  pause();
-                }}
-                className="chords-play-button"
-              >
-                ❚❚ Stop Early
-              </button>
+              <div style={{ display: "flex", gap: 12 }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsSyncing(false);
+                    pause();
+                    seek(0);
+                  }}
+                  className="chords-play-button"
+                >
+                  ❚❚ Stop Early
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRestart}
+                  className="chords-play-button"
+                  style={{ background: "#def4f8" }}
+                >
+                  ↺ Restart Track from 0s
+                </button>
+              </div>
             </div>
           )}
 
@@ -180,17 +199,28 @@ export default function SyncHelper({ params }: SyncHelperProps) {
               >
                 {outputJson}
               </pre>
-              <button
-                type="button"
-                onClick={() => {
-                  setLines([]);
-                  setCurrentIndex(0);
-                }}
-                className="chords-demo-link"
-                style={{ marginTop: 16, display: "inline-block" }}
-              >
-                ↺ Start Over
-              </button>
+              <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLines([]);
+                    setCurrentIndex(0);
+                    pause();
+                    seek(0);
+                  }}
+                  className="chords-demo-link"
+                >
+                  ↺ Reset All Lines
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRestart}
+                  className="chords-demo-link"
+                  style={{ background: "#def4f8" }}
+                >
+                  ↺ Re-record Current Lyrics from 0s
+                </button>
+              </div>
             </div>
           )}
         </div>

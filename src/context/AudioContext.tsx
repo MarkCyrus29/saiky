@@ -15,12 +15,16 @@ interface AudioContextValue {
   isPlaying: boolean;
   currentTime: number;
   duration: number;
+  volume: number;
   error: string | null;
   activeLyricsTrack: Track | null;
   playTrack: (track: Track) => void;
   togglePlay: (track?: Track) => void;
   pause: () => void;
   seek: (seconds: number) => void;
+  setVolume: (vol: number) => void;
+  nextTrack: () => void;
+  prevTrack: () => void;
   openLyrics: (track: Track) => void;
   closeLyrics: () => void;
 }
@@ -32,10 +36,19 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
+  const [volume, setVolumeState] = useState<number>(0.85);
   const [error, setError] = useState<string | null>(null);
   const [activeLyricsTrack, setActiveLyricsTrack] = useState<Track | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const setVolume = useCallback((vol: number) => {
+    const clamped = Math.max(0, Math.min(1, vol));
+    setVolumeState(clamped);
+    if (audioRef.current) {
+      audioRef.current.volume = clamped;
+    }
+  }, []);
 
   // Play a specific track from start
   const playTrack = useCallback((track: Track) => {
@@ -45,8 +58,10 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
 
     if (audioRef.current.src !== window.location.origin + track.audioSrc && !audioRef.current.src.endsWith(track.audioSrc)) {
       audioRef.current.src = track.audioSrc;
-      audioRef.current.currentTime = 0;
     }
+    audioRef.current.currentTime = 0;
+    setCurrentTime(0);
+
     const playPromise = audioRef.current.play();
     if (playPromise !== undefined) {
       playPromise
@@ -116,6 +131,31 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const nextTrack = useCallback(() => {
+    if (!currentTrack) {
+      playTrack(TRACKS[0]);
+      return;
+    }
+    const idx = TRACKS.findIndex((t) => t.id === currentTrack.id);
+    const nextIdx = (idx + 1) % TRACKS.length;
+    playTrack(TRACKS[nextIdx]);
+  }, [currentTrack, playTrack]);
+
+  const prevTrack = useCallback(() => {
+    if (!currentTrack) {
+      playTrack(TRACKS[0]);
+      return;
+    }
+    if (audioRef.current && audioRef.current.currentTime > 3) {
+      audioRef.current.currentTime = 0;
+      setCurrentTime(0);
+      return;
+    }
+    const idx = TRACKS.findIndex((t) => t.id === currentTrack.id);
+    const prevIdx = (idx - 1 + TRACKS.length) % TRACKS.length;
+    playTrack(TRACKS[prevIdx]);
+  }, [currentTrack, playTrack]);
+
   const openLyrics = useCallback((track: Track) => {
     setActiveLyricsTrack(track);
   }, []);
@@ -124,21 +164,12 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     setActiveLyricsTrack(null);
   }, []);
 
-  // Handle track ended -> auto advance 1..4 then stop
+  // Handle track ended -> auto advance 1..4, then loop back to 1
   const handleEnded = useCallback(() => {
     if (!currentTrack) return;
     const currentIndex = TRACKS.findIndex((t) => t.id === currentTrack.id);
-    if (currentIndex >= 0 && currentIndex < TRACKS.length - 1) {
-      // Advance to next track
-      playTrack(TRACKS[currentIndex + 1]);
-    } else {
-      // Reached end of track 4: stop and reset without looping
-      setIsPlaying(false);
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
-      }
-      setCurrentTime(0);
-    }
+    const nextIndex = (currentIndex + 1) % TRACKS.length;
+    playTrack(TRACKS[nextIndex]);
   }, [currentTrack, playTrack]);
 
   // Wire up Media Session API
@@ -193,12 +224,16 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
         isPlaying,
         currentTime,
         duration,
+        volume,
         error,
         activeLyricsTrack,
         playTrack,
         togglePlay,
         pause,
         seek,
+        setVolume,
+        nextTrack,
+        prevTrack,
         openLyrics,
         closeLyrics,
       }}

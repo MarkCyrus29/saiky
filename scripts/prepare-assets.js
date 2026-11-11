@@ -11,7 +11,7 @@ if (!fs.existsSync(OUT_DIR)) {
 
 // Circular SVG mask generator for round paper discs cut out with scissors
 function createCircleMask(size, radius) {
-  const r = radius || Math.floor(size * 0.485);
+  const r = radius || Math.floor(size / 2);
   const c = Math.floor(size / 2);
   return Buffer.from(
     `<svg width="${size}" height="${size}">
@@ -82,7 +82,58 @@ async function prepareTitles() {
 
 async function prepareVinyls() {
   console.log('Processing vinyls...');
-  const mask = createCircleMask(900, 436);
+  const BETTER_DIR = path.join(__dirname, '..', 'public', 'bettter-assets');
+  
+  if (fs.existsSync(BETTER_DIR)) {
+    console.log('Using cut-out proportional discs from bettter-assets...');
+    const discMap = [
+      { src: 'you_looked_away', dests: ['youlookedaway', 'you_looked_away'] },
+      { src: 'wrightway', dests: ['wrightway'] },
+      { src: 'question_mark', dests: ['question', 'question_mark'] },
+      { src: 'traffic_cones', dests: ['traffic', 'traffic_cones'] }
+    ];
+
+    for (const d of discMap) {
+      // Assets are already proportional at 2000x2000 — just resize directly, no trimming
+      const normBuf = await sharp(path.join(BETTER_DIR, `${d.src}.png`))
+        .resize(1000, 1000)
+        .png({ quality: 95, compressionLevel: 8 })
+        .toBuffer();
+
+      const normWebp = await sharp(normBuf)
+        .webp({ quality: 92, alphaQuality: 95 })
+        .toBuffer();
+
+      const hoverBuf = await sharp(path.join(BETTER_DIR, `${d.src}_hover.png`))
+        .resize(1000, 1000)
+        .png({ quality: 95, compressionLevel: 8 })
+        .toBuffer();
+
+      const hoverWebp = await sharp(hoverBuf)
+        .webp({ quality: 92, alphaQuality: 95 })
+        .toBuffer();
+
+      for (const dest of d.dests) {
+        await sharp(normBuf).toFile(path.join(OUT_DIR, `vinyl-${dest}.png`));
+        await sharp(normWebp).toFile(path.join(OUT_DIR, `vinyl-${dest}.webp`));
+        await sharp(hoverBuf).toFile(path.join(OUT_DIR, `vinyl-${dest}_hover.png`));
+        await sharp(hoverWebp).toFile(path.join(OUT_DIR, `vinyl-${dest}_hover.webp`));
+      }
+      console.log(`Vinyl ${d.src} done`);
+    }
+
+    // Favicon
+    const faviconBuffer = await sharp(path.join(OUT_DIR, 'vinyl-youlookedaway.png'))
+      .resize(64, 64)
+      .png()
+      .toBuffer();
+    await sharp(faviconBuffer).toFile(path.join(OUT_DIR, 'favicon.png'));
+    await sharp(faviconBuffer).toFile(path.join(__dirname, '..', 'public', 'favicon.ico'));
+    console.log('Favicon done');
+    return;
+  }
+
+  const mask = createCircleMask(900, 450);
 
   const vinylConfigs = [
     {
@@ -120,9 +171,14 @@ async function prepareVinyls() {
     const nLeft = Math.max(0, Math.min(nMeta.width - vc.norm.size, vc.norm.cx - nHalf));
     const nTop = Math.max(0, Math.min(nMeta.height - vc.norm.size, vc.norm.cy - nHalf));
 
-    const nProcessed = await sharp(nBuf)
+    const nResized = await sharp(nBuf)
       .extract({ left: nLeft, top: nTop, width: vc.norm.size, height: vc.norm.size })
       .resize(900, 900)
+      .ensureAlpha()
+      .png()
+      .toBuffer();
+
+    const nProcessed = await sharp(nResized)
       .composite([{ input: mask, blend: 'dest-in' }])
       .toBuffer();
 
@@ -136,9 +192,14 @@ async function prepareVinyls() {
     const hLeft = Math.max(0, Math.min(hMeta.width - vc.hover.size, vc.hover.cx - hHalf));
     const hTop = Math.max(0, Math.min(hMeta.height - vc.hover.size, vc.hover.cy - hHalf));
 
-    const hProcessed = await sharp(hBuf)
+    const hResized = await sharp(hBuf)
       .extract({ left: hLeft, top: hTop, width: vc.hover.size, height: vc.hover.size })
       .resize(900, 900)
+      .ensureAlpha()
+      .png()
+      .toBuffer();
+
+    const hProcessed = await sharp(hResized)
       .composite([{ input: mask, blend: 'dest-in' }])
       .toBuffer();
 
@@ -161,11 +222,38 @@ async function prepareVinyls() {
   console.log('Favicon done');
 }
 
+async function prepareSocials() {
+  const BETTER_DIR = path.join(__dirname, '..', 'public', 'bettter-assets');
+  if (!fs.existsSync(BETTER_DIR)) return;
+
+  const SOCIALS_DIR = path.join(OUT_DIR, 'socials');
+  if (!fs.existsSync(SOCIALS_DIR)) fs.mkdirSync(SOCIALS_DIR, { recursive: true });
+
+  const socials = ['spotify', 'bandcamp', 'soundcloud', 'tiktok', 'ig', 'yt'];
+  for (const s of socials) {
+    const norm = path.join(BETTER_DIR, `${s}.png`);
+    const hover = path.join(BETTER_DIR, `${s}_hover.png`);
+
+    const normBuf = await sharp(norm).resize(320, 320).png({ quality: 95 }).toBuffer();
+    const normWebp = await sharp(normBuf).webp({ quality: 92, alphaQuality: 95 }).toBuffer();
+
+    const hoverBuf = await sharp(hover).resize(320, 320).png({ quality: 95 }).toBuffer();
+    const hoverWebp = await sharp(hoverBuf).webp({ quality: 92, alphaQuality: 95 }).toBuffer();
+
+    await sharp(normBuf).toFile(path.join(SOCIALS_DIR, `${s}.png`));
+    await sharp(normWebp).toFile(path.join(SOCIALS_DIR, `${s}.webp`));
+    await sharp(hoverBuf).toFile(path.join(SOCIALS_DIR, `${s}_hover.png`));
+    await sharp(hoverWebp).toFile(path.join(SOCIALS_DIR, `${s}_hover.webp`));
+  }
+  console.log('Social icons done');
+}
+
 async function main() {
   console.log('Running repeatable asset preparation script...');
   await prepareHeader();
   await prepareTitles();
   await prepareVinyls();
+  await prepareSocials();
   console.log('All assets generated in public/assets/ with WebP and PNG/JPEG fallbacks.');
 }
 

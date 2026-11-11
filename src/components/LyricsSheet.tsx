@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { useAudio } from "@/src/context/AudioContext";
-import { Tape } from "./Tape";
 
 export const LyricsSheet: React.FC = () => {
   const {
@@ -112,22 +111,6 @@ export const LyricsSheet: React.FC = () => {
         className="lyrics-sheet-card"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Notebook Tape at corners */}
-        <Tape
-          variant="kraft"
-          angle={-2}
-          width={80}
-          height={26}
-          style={{ position: "absolute", top: -12, left: 30, zIndex: 10 }}
-        />
-        <Tape
-          variant="cyan"
-          angle={3}
-          width={85}
-          height={26}
-          style={{ position: "absolute", top: -10, right: 30, zIndex: 10 }}
-        />
-
         {/* Sheet Header */}
         <div className="lyrics-sheet-header">
           <div className="lyrics-title-group">

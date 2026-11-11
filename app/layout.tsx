@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AudioProvider } from "@/src/context/AudioContext";
+import { MiniPlayer } from "@/src/components/MiniPlayer";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -8,8 +9,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Saiky's Space",
-  description: "A handmade one-page website for the artist Saiky",
+  title: "saiky's space",
+  description: "check out saiky's music!",
   icons: {
     icon: [
       { url: "/assets/favicon.png", type: "image/png" },
@@ -34,7 +35,10 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <AudioProvider>{children}</AudioProvider>
+        <AudioProvider>
+          {children}
+          <MiniPlayer />
+        </AudioProvider>
       </body>
     </html>
   );

@@ -4,8 +4,6 @@ import React, { use, useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { getTrackBySlug, LyricLine, ChordMarker } from "@/src/data/tracks";
 import { useAudio } from "@/src/context/AudioContext";
-import { MiniPlayer } from "@/src/components/MiniPlayer";
-import { Tape } from "@/src/components/Tape";
 
 interface ChordsPageProps {
   params: Promise<{ slug: string }>;
@@ -128,22 +126,6 @@ export default function ChordsPage({ params }: ChordsPageProps) {
       <div className="chords-sheet-container">
         {/* Notebook sheet */}
         <div className="chords-notebook-sheet">
-          {/* Taped pieces */}
-          <Tape
-            variant="cream"
-            angle={-2.2}
-            width={90}
-            height={28}
-            style={{ position: "absolute", top: -14, left: 35, zIndex: 10 }}
-          />
-          <Tape
-            variant="cyan"
-            angle={2.8}
-            width={95}
-            height={28}
-            style={{ position: "absolute", top: -12, right: 35, zIndex: 10 }}
-          />
-
           {/* Navigation & Header */}
           <div className="chords-header">
             <Link href="/" className="chords-back-link">
@@ -243,9 +225,6 @@ export default function ChordsPage({ params }: ChordsPageProps) {
           </div>
         </div>
       </div>
-
-      {/* Persistent Mini Player at bottom */}
-      <MiniPlayer />
     </main>
   );
 }

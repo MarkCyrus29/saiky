@@ -11,7 +11,7 @@ async function waitForServer() {
   while (Date.now() - start < 15000) {
     try {
       await new Promise((resolve, reject) => {
-        const req = http.get(`http://127.0.0.1:${PORT}`, (res) => {
+        const req = http.get(`http://localhost:${PORT}`, (res) => {
           if (res.statusCode === 200) resolve();
           else reject(new Error('Status ' + res.statusCode));
         });
@@ -30,7 +30,7 @@ async function waitForServer() {
 async function main() {
   console.log('Starting Next.js server on port', PORT);
   const nextBinary = path.join(__dirname, '..', 'node_modules', 'next', 'dist', 'bin', 'next');
-  const nextProcess = spawn(process.execPath, [nextBinary, 'start', '-p', String(PORT)], {
+  const nextProcess = spawn(process.execPath, [nextBinary, 'start', '-H', '0.0.0.0', '-p', String(PORT)], {
     cwd: path.join(__dirname, '..'),
     stdio: 'inherit',
   });
@@ -40,28 +40,22 @@ async function main() {
 
     const targets = [
       {
-        url: `http://127.0.0.1:${PORT}/`,
-        size: '1440,1600',
-        out: 'screenshot-1440.png',
-        extra: '',
-      },
-      {
-        url: `http://127.0.0.1:${PORT}/?mode=player`,
-        size: '1440,1400',
+        url: `http://localhost:${PORT}/`,
+        size: '1440,900',
         out: 'screenshot-player.png',
         extra: '',
       },
       {
-        url: `http://127.0.0.1:${PORT}/`,
-        size: '390,1400',
-        out: 'screenshot-390.png',
-        extra: '--user-agent="Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"',
+        url: `http://localhost:${PORT}/track/you-looked-away/lyrics`,
+        size: '1440,900',
+        out: 'screenshot-lyrics.png',
+        extra: '',
       },
       {
-        url: `http://127.0.0.1:${PORT}/track/demo-test/chords`,
-        size: '1440,1400',
-        out: 'screenshot-chords.png',
-        extra: '',
+        url: `http://localhost:${PORT}/`,
+        size: '390,844',
+        out: 'screenshot-390.png',
+        extra: '--user-agent="Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1"',
       },
     ];
 

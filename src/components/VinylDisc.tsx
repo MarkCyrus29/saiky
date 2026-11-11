@@ -44,7 +44,11 @@ export const VinylDisc: React.FC<VinylDiscProps> = ({
         style={dimensionStyle}
       >
         {/* Base normal drawing */}
-        <picture>
+        <picture
+          className={`vinyl-img-wrapper vinyl-img-wrapper--normal ${
+            isHoveredOrFocused ? "is-hidden" : ""
+          }`}
+        >
           <source srcSet={`/assets/vinyl-${vinylName}.webp`} type="image/webp" />
           <img
             src={`/assets/vinyl-${vinylName}.png`}
@@ -56,11 +60,11 @@ export const VinylDisc: React.FC<VinylDiscProps> = ({
           />
         </picture>
 
-        {/* Hover blue highlighter overlay with quick crossfade */}
+        {/* Hover blue highlighter overlay */}
         <picture
-          className={`vinyl-img-hover-wrapper ${
+          className={`vinyl-img-wrapper vinyl-img-wrapper--hover ${
             isHoveredOrFocused ? "is-active" : ""
-          } ${isPlaying ? "is-playing" : ""}`}
+          }`}
           aria-hidden="true"
         >
           <source

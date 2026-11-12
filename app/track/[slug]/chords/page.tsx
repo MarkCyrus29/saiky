@@ -2,6 +2,7 @@
 
 import React, { use, useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
+import { ArrowLeft, ArrowRight, Play } from "lucide-react";
 import { getTrackBySlug, LyricLine, ChordMarker } from "@/src/data/tracks";
 import { useAudio } from "@/src/context/AudioContext";
 
@@ -111,8 +112,13 @@ export default function ChordsPage({ params }: ChordsPageProps) {
       <main className="desk-surface chords-page-wrapper">
         <div className="chords-notebook-sheet">
           <p>Track not found.</p>
-          <Link href="/" className="chords-back-link">
-            ← back to desk
+          <Link
+            href="/"
+            className="chords-back-link"
+            style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+          >
+            <ArrowLeft size={16} />
+            <span>back to desk</span>
           </Link>
         </div>
       </main>
@@ -128,8 +134,13 @@ export default function ChordsPage({ params }: ChordsPageProps) {
         <div className="chords-notebook-sheet">
           {/* Navigation & Header */}
           <div className="chords-header">
-            <Link href="/" className="chords-back-link">
-              ← back to desk
+            <Link
+              href="/"
+              className="chords-back-link"
+              style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+            >
+              <ArrowLeft size={16} />
+              <span>back to desk</span>
             </Link>
 
             <div className="chords-title-group">
@@ -146,8 +157,10 @@ export default function ChordsPage({ params }: ChordsPageProps) {
                   type="button"
                   className="chords-play-button"
                   onClick={() => togglePlay(track)}
+                  style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
                 >
-                  ▶ play song
+                  <Play size={15} />
+                  <span>play song</span>
                 </button>
               )}
             </div>
@@ -172,8 +185,10 @@ export default function ChordsPage({ params }: ChordsPageProps) {
                   <Link
                     href="/track/demo-test/chords"
                     className="chords-demo-link"
+                    style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
                   >
-                    view demo chords sheet →
+                    <span>view demo chords sheet</span>
+                    <ArrowRight size={14} />
                   </Link>
                 </div>
               </div>

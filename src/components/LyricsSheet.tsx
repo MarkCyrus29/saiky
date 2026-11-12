@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
+import { Play, ArrowRight, X } from "lucide-react";
 import { useAudio } from "@/src/context/AudioContext";
 
 export const LyricsSheet: React.FC = () => {
@@ -128,8 +129,10 @@ export const LyricsSheet: React.FC = () => {
                 className="lyrics-play-button"
                 onClick={() => togglePlay(activeLyricsTrack)}
                 aria-label={`Play ${activeLyricsTrack.title}`}
+                style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
               >
-                ▶ play track
+                <Play size={14} />
+                <span>play track</span>
               </button>
             )}
 
@@ -138,8 +141,10 @@ export const LyricsSheet: React.FC = () => {
               href={`/track/${activeLyricsTrack.slug}/chords`}
               className="lyrics-chords-link"
               onClick={closeLyrics}
+              style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}
             >
-              chords →
+              <span>chords</span>
+              <ArrowRight size={14} />
             </Link>
 
             {/* Close button */}
@@ -148,8 +153,9 @@ export const LyricsSheet: React.FC = () => {
               className="lyrics-close-button"
               onClick={closeLyrics}
               aria-label="Close lyrics sheet"
+              style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}
             >
-              ✕
+              <X size={20} />
             </button>
           </div>
         </div>

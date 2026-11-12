@@ -2,6 +2,7 @@
 
 import React from "react";
 import { usePathname } from "next/navigation";
+import { Play, Pause, SkipBack, SkipForward } from "lucide-react";
 import { useAudio } from "@/src/context/AudioContext";
 import { VinylDisc } from "./VinylDisc";
 
@@ -47,7 +48,7 @@ export const MiniPlayer: React.FC = () => {
             aria-label="Last song"
             title="Last song"
           >
-            ⏮
+            <SkipBack size={14} />
           </button>
 
           <button
@@ -57,7 +58,7 @@ export const MiniPlayer: React.FC = () => {
             aria-label={isPlaying ? "Pause audio" : "Play audio"}
             title={isPlaying ? "Pause" : "Play"}
           >
-            {isPlaying ? "❚❚" : "▶"}
+            {isPlaying ? <Pause size={15} /> : <Play size={15} />}
           </button>
 
           <button
@@ -67,7 +68,7 @@ export const MiniPlayer: React.FC = () => {
             aria-label="Next song"
             title="Next song"
           >
-            ⏭
+            <SkipForward size={14} />
           </button>
         </div>
       </div>

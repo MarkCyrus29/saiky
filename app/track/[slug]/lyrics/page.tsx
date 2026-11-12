@@ -2,6 +2,7 @@
 
 import React, { use, useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
+import { ArrowLeft, ArrowRight, Play, Pause } from "lucide-react";
 import { getTrackBySlug } from "@/src/data/tracks";
 import { useAudio } from "@/src/context/AudioContext";
 
@@ -76,8 +77,13 @@ export default function LyricsPage({ params }: LyricsPageProps) {
       <main className="lyrics-fullpage">
         <div className="lyrics-fullpage-inner">
           <p>Track not found.</p>
-          <Link href="/" className="chords-back-link">
-            ← back to desk
+          <Link
+            href="/"
+            className="chords-back-link"
+            style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+          >
+            <ArrowLeft size={16} />
+            <span>back to desk</span>
           </Link>
         </div>
       </main>
@@ -90,8 +96,13 @@ export default function LyricsPage({ params }: LyricsPageProps) {
     <main className="lyrics-fullpage">
       {/* Navigation & Header */}
       <div className="lyrics-fullpage-header">
-        <Link href="/" className="chords-back-link">
-          ← back to desk
+        <Link
+          href="/"
+          className="chords-back-link"
+          style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+        >
+          <ArrowLeft size={16} />
+          <span>back to desk</span>
         </Link>
 
         <div className="chords-title-group">
@@ -106,9 +117,15 @@ export default function LyricsPage({ params }: LyricsPageProps) {
           <Link
             href={`/track/${track.slug}/chords`}
             className="chords-play-button"
-            style={{ textDecoration: "none", display: "inline-block" }}
+            style={{
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+            }}
           >
-            chords →
+            <span>chords</span>
+            <ArrowRight size={14} />
           </Link>
 
           <button
@@ -116,8 +133,19 @@ export default function LyricsPage({ params }: LyricsPageProps) {
             className="chords-play-button"
             onClick={() => togglePlay(track)}
             aria-label={isCurrentTrackPlaying && isPlaying ? "Pause song" : "Play song"}
+            style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
           >
-            {isCurrentTrackPlaying && isPlaying ? "❚❚ pause" : "▶ play song"}
+            {isCurrentTrackPlaying && isPlaying ? (
+              <>
+                <Pause size={15} />
+                <span>pause</span>
+              </>
+            ) : (
+              <>
+                <Play size={15} />
+                <span>play song</span>
+              </>
+            )}
           </button>
         </div>
       </div>
@@ -141,9 +169,15 @@ export default function LyricsPage({ params }: LyricsPageProps) {
               <Link
                 href={`/track/${track.slug}/chords`}
                 className="chords-demo-link"
-                style={{ marginTop: 12 }}
+                style={{
+                  marginTop: 12,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                }}
               >
-                view chords page →
+                <span>view chords page</span>
+                <ArrowRight size={14} />
               </Link>
             </div>
           </div>

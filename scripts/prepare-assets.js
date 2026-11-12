@@ -82,10 +82,10 @@ async function prepareTitles() {
 
 async function prepareVinyls() {
   console.log('Processing vinyls...');
-  const BETTER_DIR = path.join(__dirname, '..', 'public', 'bettter-assets');
+  const BETTER_DIR = path.join(__dirname, '..', 'public', 'better-assets');
   
   if (fs.existsSync(BETTER_DIR)) {
-    console.log('Using cut-out proportional discs from bettter-assets...');
+    console.log('Using cut-out proportional discs from better-assets...');
     const discMap = [
       { src: 'you_looked_away', dests: ['youlookedaway', 'you_looked_away'] },
       { src: 'wrightway', dests: ['wrightway'] },
@@ -223,7 +223,7 @@ async function prepareVinyls() {
 }
 
 async function prepareSocials() {
-  const BETTER_DIR = path.join(__dirname, '..', 'public', 'bettter-assets');
+  const BETTER_DIR = path.join(__dirname, '..', 'public', 'better-assets');
   if (!fs.existsSync(BETTER_DIR)) return;
 
   const SOCIALS_DIR = path.join(OUT_DIR, 'socials');

@@ -14,6 +14,7 @@ export interface Track {
   slug: string;
   title: string;
   audioSrc: string;
+  videoSrc?: string;
   vinylName: string;
   titleNum: number;
   lyrics: LyricLine[];
@@ -27,6 +28,7 @@ export const TRACKS: Track[] = [
     slug: "you-looked-away",
     title: "you looked away",
     audioSrc: "/music/1_youlookedaway.mp3",
+    videoSrc: "/videos/youlookedaway.mp4",
     vinylName: "youlookedaway",
     titleNum: 1,
     lyrics: [],
@@ -36,6 +38,7 @@ export const TRACKS: Track[] = [
     slug: "wrightway",
     title: "wrightway",
     audioSrc: "/music/2_wrightway.mp3",
+    videoSrc: "/videos/wrightway.mp4",
     vinylName: "wrightway",
     titleNum: 2,
     lyrics: [],
@@ -43,7 +46,7 @@ export const TRACKS: Track[] = [
   {
     id: 3,
     slug: "question-mark",
-    title: "question mark!",
+    title: "question Mark!",
     audioSrc: "/music/3_question_mark.mp3",
     vinylName: "question",
     titleNum: 3,
@@ -54,6 +57,7 @@ export const TRACKS: Track[] = [
     slug: "traffic-cones",
     title: "TRAFFIC CONES / it's just hiccup",
     audioSrc: "/music/4_itsjusthiccup.mp3",
+    videoSrc: "/videos/trafficcones.mp4",
     vinylName: "traffic",
     titleNum: 4,
     lyrics: [],

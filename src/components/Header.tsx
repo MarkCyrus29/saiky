@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 
 interface SocialItem {
   name: string;
@@ -65,34 +66,30 @@ export const Header: React.FC = () => {
       >
         <div className="header-image-stack">
           {/* Base normal drawing */}
-          <picture>
-            <source srcSet="/assets/header.webp" type="image/webp" />
-            <img
-              src="/assets/header.jpg"
-              alt="Saiky's Space"
-              width={1600}
-              height={521}
-              className="header-img header-img--normal"
-              fetchPriority="high"
-            />
-          </picture>
+          <Image
+            src="/assets/header.jpg"
+            alt="Saiky's Space"
+            width={1600}
+            height={521}
+            className="header-img header-img--normal"
+            priority
+          />
 
           {/* Hover blue highlighter overlay */}
-          <picture
+          <div
             className={`header-img-hover-wrapper ${
               isHovered ? "is-active" : ""
             }`}
             aria-hidden="true"
           >
-            <source srcSet="/assets/header_hover.webp" type="image/webp" />
-            <img
+            <Image
               src="/assets/header_hover.jpg"
               alt=""
               width={1600}
               height={521}
               className="header-img header-img--hover"
             />
-          </picture>
+          </div>
         </div>
       </div>
 
@@ -110,26 +107,22 @@ export const Header: React.FC = () => {
             style={{ "--askew": `${social.tilt}deg` } as React.CSSProperties}
           >
             <div className="social-icon-stack">
-              <picture>
-                <source srcSet={`/assets/socials/${social.key}.webp`} type="image/webp" />
-                <img
-                  src={`/assets/socials/${social.key}.png`}
-                  alt={social.name}
-                  width={320}
-                  height={320}
-                  className="social-icon-img social-icon-img--normal"
-                />
-              </picture>
-              <picture className="social-icon-hover-wrapper" aria-hidden="true">
-                <source srcSet={`/assets/socials/${social.key}_hover.webp`} type="image/webp" />
-                <img
+              <Image
+                src={`/assets/socials/${social.key}.png`}
+                alt={social.name}
+                width={88}
+                height={88}
+                className="social-icon-img social-icon-img--normal"
+              />
+              <div className="social-icon-hover-wrapper" aria-hidden="true">
+                <Image
                   src={`/assets/socials/${social.key}_hover.png`}
                   alt=""
-                  width={320}
-                  height={320}
+                  width={88}
+                  height={88}
                   className="social-icon-img social-icon-img--hover"
                 />
-              </picture>
+              </div>
             </div>
           </a>
         ))}

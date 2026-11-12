@@ -26,6 +26,7 @@
 screenshot*.png
 test_*.png
 test_*.jpg
+public/videos/
 
 # debug
 npm-debug.log*

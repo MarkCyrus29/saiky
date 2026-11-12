@@ -2,6 +2,7 @@
 
 import React, { use, useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { ArrowLeft, Play, Pause, RotateCcw, Check } from "lucide-react";
 import { getTrackBySlug, LyricLine } from "@/src/data/tracks";
 import { useAudio } from "@/src/context/AudioContext";
 
@@ -99,7 +100,14 @@ export default function SyncHelper({ params }: SyncHelperProps) {
     <main className="desk-surface chords-page-wrapper">
       <div className="chords-notebook-sheet" style={{ maxWidth: 800 }}>
         <div className="chords-header">
-          <Link href="/" className="chords-back-link">← back to desk</Link>
+          <Link
+            href="/"
+            className="chords-back-link"
+            style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+          >
+            <ArrowLeft size={16} />
+            <span>back to desk</span>
+          </Link>
           <div className="chords-title-group">
             <h1 className="chords-title">Dev Timestamp Helper: {track.title}</h1>
             <span className="chords-sub">Tap SPACEBAR at the start of each line</span>
@@ -130,9 +138,16 @@ export default function SyncHelper({ params }: SyncHelperProps) {
                 type="button"
                 onClick={handleStart}
                 className="chords-play-button"
-                style={{ marginTop: 12, fontSize: "1.2rem" }}
+                style={{
+                  marginTop: 12,
+                  fontSize: "1.2rem",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                }}
               >
-                ▶ Start Sync Session (plays audio)
+                <Play size={16} />
+                <span>Start Sync Session (plays audio)</span>
               </button>
             </div>
           )}
@@ -144,9 +159,9 @@ export default function SyncHelper({ params }: SyncHelperProps) {
                   Current Time: {currentTime.toFixed(2)}s | Next Line to Stamp: {currentIndex + 1} of {lines.length}
                 </p>
                 <p style={{ fontSize: "1.1rem", marginTop: 4 }}>
-                  👉 Tap <strong>SPACEBAR</strong> right when Saiky begins singing this line:
+                  Tap <strong>SPACEBAR</strong> right when Saiky begins singing this line:
                 </p>
-                <div style={{ fontSize: "1.5rem", marginTop: 8, background: "#fff", padding: "8px 12px", border: "1px dashed #19b3c8" }}>
+                <div style={{ fontSize: "1.5rem", marginTop: 8, background: "#fff", padding: "8px 12px", border: "1px dashed var(--color-cyan)" }}>
                   "{lines[currentIndex]?.text}"
                 </div>
               </div>
@@ -159,16 +174,24 @@ export default function SyncHelper({ params }: SyncHelperProps) {
                     seek(0);
                   }}
                   className="chords-play-button"
+                  style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
                 >
-                  ❚❚ Stop Early
+                  <Pause size={15} />
+                  <span>Stop Early</span>
                 </button>
                 <button
                   type="button"
                   onClick={handleRestart}
                   className="chords-play-button"
-                  style={{ background: "#def4f8" }}
+                  style={{
+                    background: "#def4f8",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                  }}
                 >
-                  ↺ Restart Track from 0s
+                  <RotateCcw size={15} />
+                  <span>Restart Track from 0s</span>
                 </button>
               </div>
             </div>
@@ -182,8 +205,16 @@ export default function SyncHelper({ params }: SyncHelperProps) {
                   type="button"
                   onClick={handleCopy}
                   className="chords-play-button"
+                  style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
                 >
-                  {copied ? "✓ Copied to clipboard!" : "Copy JSON"}
+                  {copied ? (
+                    <>
+                      <Check size={15} />
+                      <span>Copied to clipboard!</span>
+                    </>
+                  ) : (
+                    "Copy JSON"
+                  )}
                 </button>
               </div>
               <pre
@@ -209,16 +240,24 @@ export default function SyncHelper({ params }: SyncHelperProps) {
                     seek(0);
                   }}
                   className="chords-demo-link"
+                  style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
                 >
-                  ↺ Reset All Lines
+                  <RotateCcw size={15} />
+                  <span>Reset All Lines</span>
                 </button>
                 <button
                   type="button"
                   onClick={handleRestart}
                   className="chords-demo-link"
-                  style={{ background: "#def4f8" }}
+                  style={{
+                    background: "#def4f8",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                  }}
                 >
-                  ↺ Re-record Current Lyrics from 0s
+                  <RotateCcw size={15} />
+                  <span>Re-record Current Lyrics from 0s</span>
                 </button>
               </div>
             </div>

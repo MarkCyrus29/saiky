@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
+import Image from "next/image";
 import { useVinylSpin } from "@/src/hooks/useVinylSpin";
 
 interface VinylDiscProps {
@@ -44,42 +45,38 @@ export const VinylDisc: React.FC<VinylDiscProps> = ({
         style={dimensionStyle}
       >
         {/* Base normal drawing */}
-        <picture
+        <div
           className={`vinyl-img-wrapper vinyl-img-wrapper--normal ${
             isHoveredOrFocused ? "is-hidden" : ""
           }`}
         >
-          <source srcSet={`/assets/vinyl-${vinylName}.webp`} type="image/webp" />
-          <img
+          <Image
             src={`/assets/vinyl-${vinylName}.png`}
             alt=""
-            width={900}
-            height={900}
+            width={600}
+            height={600}
             className="vinyl-img vinyl-img--normal"
             draggable={false}
+            priority
           />
-        </picture>
+        </div>
 
         {/* Hover blue highlighter overlay */}
-        <picture
+        <div
           className={`vinyl-img-wrapper vinyl-img-wrapper--hover ${
             isHoveredOrFocused ? "is-active" : ""
           }`}
           aria-hidden="true"
         >
-          <source
-            srcSet={`/assets/vinyl-${vinylName}_hover.webp`}
-            type="image/webp"
-          />
-          <img
+          <Image
             src={`/assets/vinyl-${vinylName}_hover.png`}
             alt=""
-            width={900}
-            height={900}
+            width={600}
+            height={600}
             className="vinyl-img vinyl-img--hover"
             draggable={false}
           />
-        </picture>
+        </div>
       </div>
     </div>
   );

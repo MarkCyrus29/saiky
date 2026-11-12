@@ -54,7 +54,7 @@ export const TrackRow: React.FC<TrackRowProps> = ({ track, index }) => {
         aria-pressed={isCurrentlyPlaying}
         aria-label={`${isCurrentlyPlaying ? "Pause" : "Play"} track ${track.titleNum}, ${track.title}`}
       >
-        {/* The Vinyl Disc */}
+        {/* The spinning disc */}
         <div
           className="track-vinyl-box"
           style={{ transform: `rotate(${tilts.vinyl}deg)` }}

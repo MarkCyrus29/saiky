@@ -14,6 +14,7 @@ import {
   Volume1,
   Volume2,
   FileText,
+  ExternalLink,
 } from "lucide-react";
 import { Track, TRACKS } from "@/src/data/tracks";
 import { useAudio } from "@/src/context/AudioContext";
@@ -295,6 +296,19 @@ export const PlayerView: React.FC = () => {
                     <span>lyrics</span>
                     <FileText size={14} />
                   </Link>
+                  {activeTrack.youtubeId && (
+                    <a
+                      href={`https://www.youtube.com/watch?v=${activeTrack.youtubeId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="theater-action-btn"
+                      title="Watch on YouTube"
+                      style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+                    >
+                      <span>YouTube</span>
+                      <ExternalLink size={14} />
+                    </a>
+                  )}
                 </div>
               </div>
             </div>

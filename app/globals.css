@@ -647,6 +647,13 @@ img, picture {
   cursor: pointer;
 }
 
+.youtube-video-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
 .video-big-play-btn {
   position: absolute;
   top: 50%;
